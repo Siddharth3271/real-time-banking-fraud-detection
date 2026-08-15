@@ -1,0 +1,74 @@
+version: '3.8'
+
+services:
+    # REDIS- fraud detection+rate limiting
+    redis:
+        image: redis:latest
+        container_name: redis
+        ports:
+            - "6379:6379"
+        networks:
+            - banking-network
+
+    # MYSQL - All service database
+    mysql:
+        image: mysql:8.0
+        container_name: mysql
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+        ports:
+            - "3306:3306"
+        volumes:
+            - mysql-data:/var/lib/mysql
+        networks:
+            - banking-network
+
+    kafka:
+        image: confluentinc/cp-kafka:8.3.0
+        container_name: kafka
+        hostname: kafka
+
+        ports:
+        - "9092:9092"
+
+        environment:
+
+            # ---- KRaft ----
+            KAFKA_NODE_ID: 1
+            KAFKA_PROCESS_ROLES: "broker,controller"
+
+            # Controller quorum
+            KAFKA_CONTROLLER_QUORUM_VOTERS: "1@kafka:29093"
+
+            # ---- Listeners ----
+            KAFKA_LISTENERS: "PLAINTEXT://kafka:29092,CONTROLLER://kafka:29093,PLAINTEXT_HOST://0.0.0.0:9092"
+
+            KAFKA_ADVERTISED_LISTENERS: "PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092"
+
+            KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: "CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT"
+
+            KAFKA_INTER_BROKER_LISTENER_NAME: "PLAINTEXT"
+
+            KAFKA_CONTROLLER_LISTENER_NAMES: "CONTROLLER"
+
+            # ---- Single node settings ----
+            KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+            KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+            KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+
+            # Useful for local development
+            KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+
+            # ---- Cluster ID ----
+            CLUSTER_ID: "MkU3OEVBNTcwNTJENDM2Qk"
+
+        networks:
+            - banking-network
+
+volumes:
+    mysql-data:
+
+networks:
+    banking-network:
+        driver: bridge
+  
