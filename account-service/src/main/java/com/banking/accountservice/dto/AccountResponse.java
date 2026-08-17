@@ -17,7 +17,7 @@ public class AccountResponse {
     private String id;
 
 
-    private String accountNo;
+    private String accountNumber;
 
 
     private String accountHolderName;

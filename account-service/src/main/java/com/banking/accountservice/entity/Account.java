@@ -22,7 +22,7 @@ public class Account {
     private String id;
 
     @Column(nullable = false,unique = true)
-    private String accountNo;
+    private String accountNumber;
 
     @Column(nullable = false)
     private String accountHolderName;
