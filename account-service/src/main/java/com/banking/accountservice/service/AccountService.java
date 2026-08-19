@@ -8,7 +8,6 @@ import com.banking.accountservice.entity.AccountType;
 import com.banking.accountservice.repository.AccountRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.jspecify.annotations.Nullable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -20,10 +19,11 @@ import java.security.SecureRandom;
 public class AccountService {
 
     private final AccountRepository accountRepository;
+    //SecureRandom is a Java class used to generate cryptographically stronger random values than the normal Random class.
     private static SecureRandom secureRandom=new SecureRandom();
 
     public AccountResponse createAccount(CreateAccountRequest request) {
-        log.info("Creating Account for: {}"+request.getEmail());
+        log.info("Creating Account for: {}",request.getEmail());
 
         if(accountRepository.existsByEmail(request.getEmail())){
             throw new RuntimeException("Account already exists for email: "+request.getEmail());
@@ -46,7 +46,7 @@ public class AccountService {
         Account savedAccount=accountRepository.save(account);
         log.info("Account Created: {}",savedAccount.getAccountNumber());
 
-        return mapToRespone(savedAccount);
+        return mapToResponse(savedAccount);
     }
 
     //unique, 12-digit account number
@@ -64,7 +64,7 @@ public class AccountService {
         return accountNumber;
     }
 
-    private AccountResponse mapToRespone(Account account) {
+    private AccountResponse mapToResponse(Account account) {
        AccountResponse response=new AccountResponse();
        response.setId(account.getId());
        response.setAccountNumber(account.getAccountNumber());
@@ -85,7 +85,7 @@ public class AccountService {
         Account account=accountRepository.findByAccountNumber(accountNumber)
                 .orElseThrow(()->new RuntimeException("Account not found"));
 
-        return mapToRespone(account);
+        return mapToResponse(account);
     }
 
     //get account balance
