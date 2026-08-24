@@ -34,7 +34,7 @@ public class FraudDetectionService {
         log.info("Checking transaction: {} account: {} amount: {} balance: {}",transactionId,accountNumber,amount,senderBalance);
 
         //perform fraud checks
-        FraudCheckResult result=performFruadChecks(accountNumber,amount,senderBalance);
+        FraudCheckResult result=performFraudChecks(accountNumber,amount,senderBalance);
 
         if(result.isFraud()){
             log.info("Suspicious activity detected in account : {}"+" reason : {} - requesting OTP verification",accountNumber,result.getReason());
