@@ -10,7 +10,6 @@ import com.banking.transactionservice.event.TransactionInitiatedEvent;
 import com.banking.transactionservice.repository.TransactionRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.jspecify.annotations.Nullable;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
@@ -86,6 +85,10 @@ public class TransactionService {
                 .collect(Collectors.toList());
     }
 
+    public TransactionResponse verifyOTP(String transactionId, String otp) {
+
+    }
+
     private TransactionResponse mapToResponse(Transaction transaction) {
         TransactionResponse transactionResponse=new TransactionResponse();
         transactionResponse.setId(transaction.getId());
@@ -102,6 +105,5 @@ public class TransactionService {
 
         return transactionResponse;
     }
-
 
 }
